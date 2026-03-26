@@ -1,0 +1,18 @@
+# Node / Vite
+node_modules/
+dist/
+/.vite/
+
+# OS
+.DS_Store
+
+# Environment secrets
+server/.env
+server/.env.*
+.env
+.env.*
+
+# Local editor config (repo-local)
+.cursor/
+.claude/
+

@@ -1,0 +1,22 @@
+{
+  "name": "automation-backend",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "poll": "node src/jobs/pollNotion.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.3.0",
+    "axios": "^1.13.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "node-telegram-bot-api": "^0.67.0",
+    "twitter-api-v2": "^1.29.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

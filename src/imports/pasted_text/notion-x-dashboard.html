@@ -1,0 +1,213 @@
+Design a modern web dashboard UI for a content automation platform that posts from Notion to X (Twitter).
+
+This is an internal tool used by operators to manage automated social media posting workflows.
+
+Design style:
+
+Clean, minimal, data-driven UI
+White background (#FFFEFE)
+Primary color #1A44B8
+Accent color #FFF3A1
+High readability and structured layout
+Professional SaaS dashboard style
+No unnecessary decoration
+
+🧱 Main Layout
+
+Create a desktop web app layout with:
+
+Left sidebar navigation
+Top header bar
+Main content area with cards and tables
+
+📂 Sidebar Menu
+
+Dashboard
+Posts
+Automation
+Notion Sync
+Logs
+Settings
+
+🏠 Dashboard Screen
+
+Purpose: quick overview of system status
+
+Components:
+
+KPI cards:
+Total Posts
+Scheduled
+Published
+Failed
+
+Recent activity feed:
+“Post published successfully”
+“Image fetch failed”
+“Retry triggered”
+
+Automation status:
+Toggle ON/OFF
+Last run timestamp
+Next scheduled run
+
+📝 Posts Management Screen (핵심 화면)
+
+This is the main screen.
+
+Display a table of posts synced from Notion.
+
+Columns:
+
+Title
+Preview text (1–2 lines)
+Status (Ready / On hold / Published / Failed)
+Image thumbnail
+Created date
+Posted date
+X Post ID
+
+Each row actions:
+
+Preview
+Edit
+Post now
+Retry
+Delete
+
+📄 Post Detail / Preview Modal
+
+When clicking a post:
+
+Show:
+
+Full text content
+Image preview
+Character count (X limit awareness)
+Status
+
+Actions:
+
+Edit text
+Replace image
+Post to X
+Save as draft
+
+⚙️ Automation Screen
+
+Purpose: control automation logic
+
+Components:
+
+Toggle: Auto-post ON/OFF
+
+Posting condition:
+
+Status = Ready
+Status = On hold
+
+Post frequency:
+
+Immediately
+Every 5 min
+Every hour
+
+Character limit:
+
+280 / Premium mode
+
+Image handling:
+
+Use Notion image
+Re-fetch before post
+Upload to storage (toggle concept UI)
+
+🔗 Notion Sync Screen
+
+Purpose: manage Notion connection
+
+Components:
+
+Database connection status
+Database ID input
+Last sync time
+
+Mapping section:
+
+Title → Notion property
+Body → Notion property
+Image → Notion property
+Status → Notion property
+
+Sync button:
+
+“Sync Now”
+
+📊 Logs Screen
+
+Purpose: debugging and monitoring
+
+Display log list:
+
+Timestamp
+Post title
+Status (Success / Failed)
+Error message
+
+Filter:
+
+All / Success / Failed
+
+⚙️ Settings Screen
+
+API keys section:
+
+Notion Token
+X API Key
+X API Secret
+
+Environment settings:
+
+Polling interval
+Webhook URL
+
+Save button
+
+🎨 UI Details
+
+Use card-based layout
+Use table with clear spacing
+Use status badges with colors:
+
+Ready → blue
+On hold → yellow
+Published → green
+Failed → red
+
+Buttons:
+
+Primary = solid blue (#1A44B8)
+Secondary = outlined
+Danger = red
+
+🧠 UX Focus
+
+Design for clarity and speed
+Operators should quickly:
+
+See which posts are ready
+Preview content
+Trigger posting
+Identify failures
+
+Minimize clicks
+Avoid clutter
+Use clear hierarchy
+
+📱 Additional Notes
+
+Desktop-first design
+Responsive optional
+Focus on operational efficiency, not marketing visuals
+
+Include real-looking dummy data in the table and realistic UI states for loading, empty, and error conditions.
