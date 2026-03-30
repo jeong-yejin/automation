@@ -1,7 +1,8 @@
 const express = require('express')
 const config = require('../config')
 const logger = require('../utils/logger')
-const { queryAllPages, queryEligiblePages } = require('../services/notionService')
+const { getLogs } = require('../utils/logStore')
+const { queryAllPages, queryEligiblePages, createPage } = require('../services/notionService')
 const { processNotionPage } = require('../services/postProcessor')
 const {
   extractTitleProperty,
@@ -72,6 +73,22 @@ router.post('/poll/:pageId', async (req, res) => {
     res.json(result)
   } catch (err) {
     logger.error('POST /api/poll/:pageId failed', { err })
+    res.status(500).json({ error: err.message })
+  }
+})
+
+router.get('/logs', (_req, res) => {
+  res.json({ logs: getLogs() })
+})
+
+
+router.post('/posts/create', async (req, res) => {
+  try {
+    const { title, body } = req.body
+    const page = await createPage({ title, body })
+    res.json({ id: page.id })
+  } catch (err) {
+    logger.error('POST /api/posts/create failed', { err })
     res.status(500).json({ error: err.message })
   }
 })

@@ -13,6 +13,7 @@ const xService = require('./xService')
 const telegramService = require('./telegramService')
 const { composePostText } = require('./postComposer')
 const { downloadImageAsBuffer } = require('../utils/downloadImage')
+const { addLog } = require('../utils/logStore')
 
 function normalizeForDuplicateCheck(value) {
   if (!value || typeof value !== 'string') return null
@@ -157,6 +158,16 @@ async function processNotionPage({ pageId, page }) {
   } else {
     logger.warn('Telegram send failed (post itself succeeded)', { pageId, error: telegramResult.reason?.message, stack: telegramResult.reason?.stack })
   }
+
+  addLog({
+    pageId,
+    title: freshTitle || '(no title)',
+    status: 'success',
+    postId,
+    xSuccess: replyResult.status === 'fulfilled',
+    telegramSuccess: telegramResult.status === 'fulfilled',
+    telegramError: telegramResult.status === 'rejected' ? telegramResult.reason?.message : null,
+  })
 
   const updated = await notionService.updatePageAfterSuccess({
     page: freshPage,

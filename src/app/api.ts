@@ -28,3 +28,33 @@ export async function postPage(pageId: string): Promise<{ status: string }> {
   if (!res.ok) throw new Error('Failed to post page')
   return res.json()
 }
+
+export interface LogEntry {
+  ts: string
+  pageId: string
+  title: string
+  status: 'success' | 'failed'
+  postId?: string
+  xSuccess?: boolean
+  telegramSuccess?: boolean
+  telegramError?: string | null
+  error?: string
+}
+
+
+export async function createPost(title: string, body: string): Promise<{ id: string }> {
+  const res = await fetch('/api/posts/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, body }),
+  })
+  if (!res.ok) throw new Error('Failed to create post')
+  return res.json()
+}
+
+export async function fetchLogs(): Promise<LogEntry[]> {
+  const res = await fetch('/api/logs')
+  if (!res.ok) throw new Error('Failed to fetch logs')
+  const data = await res.json()
+  return data.logs
+}

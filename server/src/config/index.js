@@ -30,6 +30,7 @@ const config = {
       status: 'Status',
       image: 'img',
       postedAt: 'Posted At',
+      publishedDate: 'Published Date',
       xPostId: 'X Post ID',
     },
     eligiblePostingStatuses: ['On hold'],

@@ -33,7 +33,7 @@ async function sendPhotoToTopic(imageBuffer, mimeType, caption) {
     throw new Error(`Telegram API error: ${JSON.stringify(response.data)}`)
   }
 
-  logger.info('Telegram photo send success', { chatId, threadId, messageId: response.data.result?.message_id })
+  logger.info('Telegram photo send success', { chatId, messageId: response.data.result?.message_id })
 }
 
 module.exports = { sendPhotoToTopic }

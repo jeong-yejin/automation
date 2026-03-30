@@ -173,16 +173,20 @@ async function updatePageAfterSuccess({ page, pageId, xPostId }) {
   const statusPropName = config.notion.propertyNames.status
   const postedAtPropName = config.notion.propertyNames.postedAt
   const xPostIdPropName = config.notion.propertyNames.xPostId
+  const publishedDatePropName = config.notion.propertyNames.publishedDate
 
   const isoString = new Date().toISOString()
   const publishedStatusName = config.notion.publishedStatusName
 
   const postedAtShape = updatePostedAtPropertyShape(page, postedAtPropName, isoString)
   const xPostIdShape = updateXPostIdPropertyShape(page, xPostIdPropName, xPostId)
+  const publishedDateShape = page?.properties?.[publishedDatePropName] ? { date: { start: isoString.slice(0, 10) } } : null
+
   const properties = {
     [statusPropName]: updateStatusPropertyShape(page, statusPropName, publishedStatusName),
     ...(postedAtShape ? { [postedAtPropName]: postedAtShape } : {}),
     ...(xPostIdShape ? { [xPostIdPropName]: xPostIdShape } : {}),
+    ...(publishedDateShape ? { [publishedDatePropName]: publishedDateShape } : {}),
   }
 
   return notion.pages.update({ page_id: pageId, properties })
@@ -205,11 +209,26 @@ async function logPageSanity(page) {
   })
 }
 
+async function createPage({ title, body }) {
+  const names = config.notion.propertyNames
+  const db = await notion.databases.retrieve({ database_id: config.env.NOTION_DATABASE_ID })
+  const titlePropName = Object.entries(db.properties).find(([, p]) => p.type === 'title')?.[0] || names.title
+  return notion.pages.create({
+    parent: { database_id: config.env.NOTION_DATABASE_ID },
+    properties: {
+      [titlePropName]: { title: formatTitle(title || '') },
+      [names.body]: { rich_text: formatRichText(body || '') },
+      [names.status]: { status: { name: 'Idea' } },
+    },
+  })
+}
+
 module.exports = {
   queryAllPages,
   queryEligiblePages,
   retrievePage,
   updatePageAfterSuccess,
   logPageSanity,
+  createPage,
 }
 
