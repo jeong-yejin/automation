@@ -109,16 +109,20 @@ async function processNotionPage({ pageId, page }) {
   // Re-compose based on the fresh snapshot to keep text consistent with the image fetch.
   const freshTitle = extractTitleProperty(freshPage, titlePropName)
   const freshBody = extractBodyProperty(freshPage, bodyPropName)
+  const xSuffix = '\n📊 Live dashboard → link in reply'
   postText = composePostText({
     title: freshTitle,
     body: freshBody,
-    xCharacterLimit: config.x.characterLimit,
+    xCharacterLimit: config.x.characterLimit - xSuffix.length,
   })
 
   if (!postText) {
     logger.info('page skipped after refetch (composed post text is empty)', { pageId })
     return { status: 'skipped', reason: 'Composed post text is empty (after refetch)' }
   }
+
+  const telegramText = postText + '\n📊 <a href="https://bit.ly/4rUr57A">Live dashboard</a>'
+  const xPostText = postText + xSuffix
 
   const imageUrl = extractImageUrlProperty(freshPage, imagePropName)
   if (!imageUrl) {
@@ -131,14 +135,14 @@ async function processNotionPage({ pageId, page }) {
   const mediaId = await xService.uploadImageMedia(download.buffer, download.mimeType)
   logger.info('X upload success', { pageId, mediaId })
 
-  const postId = await xService.createPostWithMedia(postText, mediaId)
+  const postId = await xService.createPostWithMedia(xPostText, mediaId)
   logger.info('X post success', { pageId, postId })
 
   const replyText = 'Find your real-time arbitrage opportunities\nhttps://www.reboundx.net/en/funding'
   process.stderr.write('[DEBUG] Starting Promise.allSettled for reply + telegram\n')
   const [replyResult, telegramResult] = await Promise.allSettled([
     xService.replyToPost(replyText, postId),
-    telegramService.sendPhotoToTopic(download.buffer, download.mimeType, postText),
+    telegramService.sendPhotoToTopic(download.buffer, download.mimeType, telegramText),
   ])
   process.stderr.write('[DEBUG] allSettled done. reply=' + replyResult.status + ' telegram=' + telegramResult.status + '\n')
 
